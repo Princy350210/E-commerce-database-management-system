@@ -228,19 +228,20 @@ DROP TRIGGER PREVENT_NULL_CONT_ID
 
 -- Trigger to prevent salary decrease in EMPY table --
 CREATE TRIGGER PreventSalaryDecrease
-ON EMP
+ON EMPY
 AFTER UPDATE
 AS
 BEGIN
-    IF EXISTS(SELECT 1 FROM INSERTED I, DELETED D
-	WHERE I.EMP_ID=D.EMP_ID
+    IF EXISTS(SELECT 1 FROM INSERTED I,INNER JOIN DELETED D ON
+	I.EMP_ID=D.EMP_ID
 	AND I.SALARY<D.SALARY)
 	BEGIN 
 	RAISERROR('SALARY CANNOT BE DECREASED!',16,1);
 	ROLLBACK TRANSACTION;
 	END
 	END;
-   
+GO
+	
 SELECT * FROM sys.triggers WHERE name = 'PreventSalaryDecrease';
 SELECT * FROM sys.triggers WHERE is_disabled = 98727;
 ENABLE TRIGGER PreventSalaryDecrease ON EMPY;
@@ -287,7 +288,13 @@ EXEC GetEmployeesByDepartment 4;
 
 DROP PROCEDURE ADDNEWEMP;
 
---A stored procedure that fetches employee names and salaries based on department ID passed as parameter, updates their salaries by multiplying with 3.5, and prints relevant messages--
+--PROCEDURE: GETNAMESANDSALARY
+--PURPOSE: Apply a 3.5x salary multiplier to ALL employees in a given department.
+--USE CASE: Department-wide salary adjustments (e.g., company-wide raises, promotions).
+--FIX APPLIED: Previously used a scalar variable (@SALARY) which caused all employees
+--in the department to be updated to the same salary. Now correctly
+--updates each employee based on their own current salary.--
+
  CREATE PROCEDURE GETNAMESANDSALARY( @DEPT_ID INT) 
  AS
  
@@ -301,7 +308,7 @@ FROM EMPY
 WHERE DEPT_ID = @DEPT_ID;
 
 UPDATE EMPY 
-SET SALARY  = @SALARY*3.5
+SET SALARY  = SALARY*3.5
 WHERE DEPT_ID = @DEPT_ID;
 
  
@@ -437,9 +444,6 @@ END;
   BEGIN
   PRINT ' FOR UPDATION BOTH VALUES ARE TO BE PROVIDED';
   END
-
-  set statistics time on;
-  EXEC UPDATEMANAGER 98724,'FHJ JDHF';
 --Creating a CUSTOMERS table with 5 columns--
   CREATE TABLE CUSTOMERS(
   CUSTOMER_ID INT PRIMARY KEY IDENTITY(1,1),
