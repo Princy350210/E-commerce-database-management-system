@@ -39,7 +39,7 @@ This DBMS includes the following tables:
 7.	Retrieve all the projects that have a budget greater than the total contract value assigned to them. 
 8.	I created a trigger to prevent null contract value (prevent_null_id) which checks if there’s a row with null project id (proj_id) and if there is any null value then it raises an error message and rollbacks. 
 9.	Created a view to display all employees who have a salary > 50,000 along with their names department id (dept_id) and salary. Views ensure date security and data privacy.
-10.	I, furthermore, created a stored procedure which updated salary of employees taking @emp_id and @percentageIncrease as parameters (variables) along with printing the message ‘Salary updated successfully’.
+10.	I, furthermore, created a stored procedure which update salary of employees taking @emp_id and @percentageIncrease as parameters (variables) along with printing the message ‘Salary updated successfully’.
     Oh,yes, I have also handled the null case so worry not. 
 12.	What are the total sales of each product?
 13.	Used CTE table to split the full name of employees from EMPY table into first and last name increasing readability. 
@@ -52,6 +52,8 @@ This DBMS includes the following tables:
 20. Identifying the department with the highest salary.
 21. Ranking employees based on their salary.
 22. Ranking the salary of employees by department.
+23. Creating another procedure to insert a new record into the customer table.
+24. Created a procedure to enter the customer id of the customer table to see if the id exist and if the id exists we update the record and if not then we insert a record.
 
     
 I am still learning new concepts everyday to perform more advanced optimizing queries. Currently learning complex inventory problems and making good reports. 
